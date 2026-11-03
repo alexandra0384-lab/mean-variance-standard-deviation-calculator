@@ -1,8 +1,27 @@
-# This entrypoint file to be used in development. Start by reading README.md
-import mean_var_std
-from unittest import main
+import numpy as np
 
-print(mean_var_std.calculate([0,1,2,3,4,5,6,7,8]))
 
-# Run unit tests automatically
-main(module='test_module', exit=False)
+def calculate(list):
+    if len(list) != 9:
+        raise ValueError("List must contain nine numbers.")
+
+    matriz = np.array(list).reshape(3, 3)
+
+    def resumen(funcion):
+        # [eje 0 (columnas), eje 1 (filas), matriz aplanada]
+        return [
+            funcion(matriz, axis=0).tolist(),
+            funcion(matriz, axis=1).tolist(),
+            funcion(matriz).tolist(),
+        ]
+
+    calculations = {
+        'mean': resumen(np.mean),
+        'variance': resumen(np.var),
+        'standard deviation': resumen(np.std),
+        'max': resumen(np.max),
+        'min': resumen(np.min),
+        'sum': resumen(np.sum),
+    }
+
+    return calculations
